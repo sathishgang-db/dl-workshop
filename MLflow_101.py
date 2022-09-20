@@ -4,17 +4,33 @@
 # MAGIC > with Automatic MLflow Logging
 # MAGIC 
 # MAGIC ### Cluster Requirements:
-# MAGIC * ML runtime (tested on `DBR 7.6 ML`) [Docs](https://docs.databricks.com/release-notes/runtime/7.6ml.html)
-# MAGIC * Enable Cluster Spark config: `spark.databricks.mlflow.autologging.enabled true` [Docs](https://docs.databricks.com/clusters/configure.html#spark-configuration)
+# MAGIC * ML runtime
 # MAGIC 
 # MAGIC ### Setup: Imports and Load Data
 
 # COMMAND ----------
 
+# MAGIC %pip install bamboolib
+
+# COMMAND ----------
+
 from sklearn import datasets, linear_model, tree
+import numpy as np
 import pandas as pd
 iris = datasets.load_iris()
 print("Feature Data: \n", iris.data[::50], "\nTarget Classes: \n", iris.target[::50])
+
+# COMMAND ----------
+
+# MAGIC %md Sidenote: Bamboolib for EDA
+
+# COMMAND ----------
+
+import bamboolib as bam
+
+df = pd.DataFrame(data= np.c_[iris['data'], iris['target']],
+                     columns= iris['feature_names'] + ['target'])
+df
 
 # COMMAND ----------
 
@@ -39,12 +55,12 @@ model_2.fit(iris.data, iris.target)
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ### Alternative: Enable MLflow Autologging
+# MAGIC ### Enable MLflow Autologging and add a context manager
 
 # COMMAND ----------
 
 import mlflow # Import MLflow 
-mlflow.autolog() # Turn on "autologging"
+mlflow.autolog(disable=False) # Turn on "autologging"
 
 with mlflow.start_run(run_name="Sklearn Decision Tree"): #Pass in run_name using "with" Python syntax
   model_3 = tree.DecisionTreeClassifier(max_depth=5).fit(iris.data, iris.target) #Instantiate and fit model
@@ -57,8 +73,8 @@ with mlflow.start_run(run_name="Sklearn Decision Tree"): #Pass in run_name using
 
 # COMMAND ----------
 
-model_name = "mlflow_101_demo" #Or replace with your model name
-model_uri = "models:/{}/production".format(model_name)
+model_name = "sgang_mlflow101" #Or replace with your model name
+model_uri = "models:/{}/staging".format(model_name)
 
 print("Loading PRODUCTION model stage with name: '{}'".format(model_uri))
 model = mlflow.pyfunc.load_model(model_uri)
@@ -67,4 +83,5 @@ print("Model object of type:", type(model))
 # COMMAND ----------
 
 predictions = model.predict(pd.DataFrame(iris.data[::50]))
-pd.DataFrame(predictions).head()
+preds = pd.DataFrame(predictions)
+preds
