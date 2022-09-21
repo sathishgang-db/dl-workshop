@@ -9,8 +9,6 @@
 # MAGIC  - Deploy that model into production
 # MAGIC  - Update a model in production to new version including a staging phase for testing
 # MAGIC  - Archive and delete models
-# MAGIC 
-# MAGIC <img alt="Caution" title="Caution" style="vertical-align: text-bottom; position: relative; height:1.3em; top:0.0em" src="https://files.training.databricks.com/static/images/icon-warning.svg"/> This notebook makes use of the model registry. If you are using the Databricks Community Edition, click the `Upgrade` button on the landing page <a href="https://accounts.cloud.databricks.com/registration.html#login" target="_blank">or navigate here</a> to start a free trial.
 
 # COMMAND ----------
 
@@ -27,7 +25,7 @@
 # MAGIC * **Model Stage Transitions:** Record new registration events or changes as activities that automatically log users, changes, and additional metadata such as comments.
 # MAGIC * **CI/CD Workflow Integration:** Record stage transitions, request, review and approve changes as part of CI/CD pipelines for better control and governance.
 # MAGIC 
-# MAGIC <div><img src="https://files.training.databricks.com/images/eLearning/ML-Part-4/model-registry.png" style="height: 400px; margin: 20px"/></div>
+# MAGIC 
 # MAGIC 
 # MAGIC <img alt="Side Note" title="Side Note" style="vertical-align: text-bottom; position: relative; height:1.75em; top:0.05em; transform:rotate(15deg)" src="https://files.training.databricks.com/static/images/icon-note.webp"/> See <a href="https://mlflow.org/docs/latest/registry.html" target="_blank">the MLflow docs</a> for more details on the model registry.
 
@@ -114,10 +112,6 @@ model_version_details.status
 
 # MAGIC %md
 # MAGIC Now add a model description
-
-# COMMAND ----------
-
-model_details.name
 
 # COMMAND ----------
 
@@ -298,6 +292,8 @@ client.transition_model_version_stage(
 # COMMAND ----------
 
 # MAGIC %md
+# MAGIC You can use webhooks to trigger jobs external CI/CD pipelines.
+# MAGIC 
 # MAGIC Sicne this model is now in staging, you can execute an automated CI/CD pipeline against it to test it before going into production.  Once that is completed, you can push that model into production.
 
 # COMMAND ----------
@@ -371,26 +367,3 @@ client.delete_registered_model(model_name)
 # MAGIC 
 # MAGIC **Question:** What can I do programatically versus using the UI?  
 # MAGIC **Answer:** Most operations can be done using the UI or in pure Python.  A model must be tracked using Python, but from that point on everything can be done either way.  For instance, a model logged using the MLflow tracking API can then be registered using the UI and can then be pushed into production.
-
-# COMMAND ----------
-
-# MAGIC %md
-# MAGIC ## ![Spark Logo Tiny](https://files.training.databricks.com/images/105/logo_spark_tiny.png) Next Steps
-# MAGIC 
-# MAGIC If you have time, head to the [Capstone Project]($./99-Capstone-Project)!
-
-# COMMAND ----------
-
-# MAGIC %md
-# MAGIC ## Additional Topics & Resources
-# MAGIC 
-# MAGIC **Q:** Where can I find out more information on MLflow Model Registry?  
-# MAGIC **A:** Check out <a href="https://mlflow.org/docs/latest/registry.html" target="_blank">the MLflow documentation</a>
-
-# COMMAND ----------
-
-# MAGIC %md-sandbox
-# MAGIC &copy; 2021 Databricks, Inc. All rights reserved.<br/>
-# MAGIC Apache, Apache Spark, Spark and the Spark logo are trademarks of the <a href="http://www.apache.org/">Apache Software Foundation</a>.<br/>
-# MAGIC <br/>
-# MAGIC <a href="https://databricks.com/privacy-policy">Privacy Policy</a> | <a href="https://databricks.com/terms-of-use">Terms of Use</a> | <a href="http://help.databricks.com/">Support</a>
